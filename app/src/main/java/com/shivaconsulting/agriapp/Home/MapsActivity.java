@@ -40,6 +40,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -140,12 +141,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     //Id's
-    private ImageView home, booking_history, profile,imgAddLocation,imgSavedLocations;
+    private ImageView home, booking_history, profile,imgAddLocation,imgSavedLocations,belt_Type,tot_Type,combine_Type;
     private Button booking_button;
     private ImageView gps_button;
     private ConstraintLayout bookContraint;
     private CardView cardView1, cardView2, cardView3;
-    public static TextView combine_text, pick_time_text, pick_date_text, pick_area_text, tot_Type, belt_Type;
+    public static TextView  pick_time_text, pick_date_text, pick_area_text;
     public static RecyclerView time_picker_recyclerview, area_picker_recyclerview, map_search_recyler,rvAddress;
     private EditText autoCompleteTextView;
     public static DatePickerTimeline datePickerTimeline;
@@ -168,6 +169,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String myTAG="FCM check";
     MarkerOptions options = new MarkerOptions();
     ProgressDialog progressDialog;
+    ConstraintLayout constraintLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -307,10 +310,18 @@ try {
         imgSavedLocations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bookContraint.setVisibility(View.GONE);
                 rvAddress.setVisibility(View.VISIBLE);
                 autoCompleteTextView.setText(null);
                 autocompleteFragment.setText(null);
                 autoCompleteTextView.setVisibility(View.GONE);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(R.id.gps_button,ConstraintSet.BOTTOM,R.id.rvSavedLoc, ConstraintSet.BOTTOM,350);
+                constraintSet.applyTo(constraintLayout);
+                //constraintSet.clear(R.id.gps_button,ConstraintSet.BOTTOM);
+                //constraintSet.applyTo(constraintLayout);
             }
         });
 
@@ -407,16 +418,16 @@ try {
 try {
                 ServiceType = "TOT Type";
                 ServiceID = "TOT";
-                cardView1.setVisibility(View.GONE);
-                cardView2.setVisibility(View.GONE);
-                cardView3.setVisibility(View.GONE);
-                /*tot_image_1.setVisibility(View.GONE);
-                tot_image_2.setVisibility(View.GONE);
-                belt_image_1.setVisibility(View.GONE);
-                belt_image_2.setVisibility(View.GONE);
-                belt_image_3.setVisibility(View.GONE);
-*/
+
+
+                rvAddress.setVisibility(View.GONE);
                 bookContraint.setVisibility(View.VISIBLE);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(R.id.gps_button,ConstraintSet.BOTTOM,R.id.booking_constraint,
+                        ConstraintSet.TOP,0);
+                constraintSet.applyTo(constraintLayout);
 
                 datePickerTimeline.setVisibility(View.VISIBLE);
                 area_picker_recyclerview.setVisibility(View.INVISIBLE);
@@ -440,16 +451,14 @@ try {
 try {
                 ServiceType = "Belt Type";
                 ServiceID = "BLT";
-                cardView1.setVisibility(View.GONE);
-                cardView2.setVisibility(View.GONE);
-                cardView3.setVisibility(View.GONE);
-               /* tot_image_1.setVisibility(View.GONE);
-                tot_image_2.setVisibility(View.GONE);
-                belt_image_1.setVisibility(View.GONE);
-                belt_image_2.setVisibility(View.GONE);
-                belt_image_3.setVisibility(View.GONE);*/
-
+                rvAddress.setVisibility(View.GONE);
                 bookContraint.setVisibility(View.VISIBLE);
+
+                ConstraintSet constraintSet = new ConstraintSet();
+                constraintSet.clone(constraintLayout);
+                constraintSet.connect(R.id.gps_button,ConstraintSet.BOTTOM,R.id.booking_constraint,
+                        ConstraintSet.TOP,0);
+                constraintSet.applyTo(constraintLayout);
 
                 datePickerTimeline.setVisibility(View.VISIBLE);
                 area_picker_recyclerview.setVisibility(View.INVISIBLE);
@@ -464,7 +473,7 @@ try {
         });
 
 
-        combine_text.setOnClickListener(new View.OnClickListener() {
+        combine_Type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -474,16 +483,15 @@ try {
                 toast.show();*/
                 ServiceType = "Combined Type";
                 ServiceID = "CMB";
-                cardView1.setVisibility(View.GONE);
-                cardView2.setVisibility(View.GONE);
-                cardView3.setVisibility(View.GONE);
-                /*tot_image_1.setVisibility(View.GONE);
-                tot_image_2.setVisibility(View.GONE);
-                belt_image_1.setVisibility(View.GONE);
-                belt_image_2.setVisibility(View.GONE);
-                belt_image_3.setVisibility(View.GONE);
-*/
+
+                rvAddress.setVisibility(View.GONE);
                 bookContraint.setVisibility(View.VISIBLE);
+
+                    ConstraintSet constraintSet = new ConstraintSet();
+                    constraintSet.clone(constraintLayout);
+                    constraintSet.connect(R.id.gps_button,ConstraintSet.BOTTOM,R.id.booking_constraint,
+                            ConstraintSet.TOP,0);
+                    constraintSet.applyTo(constraintLayout);
 
                 datePickerTimeline.setVisibility(View.VISIBLE);
                 area_picker_recyclerview.setVisibility(View.INVISIBLE);
@@ -785,7 +793,7 @@ try {
                 return;
             }
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mMap.getUiSettings().setTiltGesturesEnabled(true);
 
 
@@ -822,6 +830,13 @@ try {
                 @Override
                 public void onMapClick(LatLng latLng) {
                     try {
+                        rvAddress.setVisibility(View.GONE);
+                        ConstraintSet constraintSet = new ConstraintSet();
+                        constraintSet.clone(constraintLayout);
+                            constraintSet.connect(R.id.gps_button,ConstraintSet.BOTTOM,R.id.booking_constraint,
+                                    ConstraintSet.BOTTOM,100);
+                            constraintSet.applyTo(constraintLayout);
+
                         bookContraint.setVisibility(View.GONE);
                         cardView1.setVisibility(View.VISIBLE);
                         cardView2.setVisibility(View.VISIBLE);
@@ -1229,7 +1244,7 @@ try {
         cardView1 = findViewById(R.id.tot_type_cardview);
         cardView2 = findViewById(R.id.belt_type_cardview);
         cardView3 = findViewById(R.id.combine_type_cardview);
-        combine_text = findViewById(R.id.combine_text);
+        combine_Type = findViewById(R.id.combine_type);
         pick_time_text = findViewById(R.id.pick_time_text);
         time_picker_recyclerview = findViewById(R.id.time_picker_recyclerview);
         area_picker_recyclerview = findViewById(R.id.area_picker_recyclerview);
@@ -1246,11 +1261,12 @@ try {
         belt_image_3 = findViewById(R.id.belt_image_3);*/
         map_search_recyler = findViewById(R.id.map_search_recyler);
         autoCompleteTextView = findViewById(R.id.autoCompleteTextView);
-        tot_Type = findViewById(R.id.totType);
-        belt_Type = findViewById(R.id.beltType);
+        tot_Type = findViewById(R.id.tot_type);
+        belt_Type = findViewById(R.id.belt_type);
         progressBar = findViewById(R.id.pb1);
         imgAddLocation=findViewById(R.id.imgAddLoc);
         imgSavedLocations=findViewById(R.id.imgSavedLoc);
+        constraintLayout=findViewById(R.id.parent_layout);
     }//ID setups
 
 
